@@ -28,3 +28,5 @@ jobs:
       run: npm ci
     - name: Run build script
       run: npm run build --if-present
+    - name: Restarting API webapp
+      run: pm2 restart index.js
