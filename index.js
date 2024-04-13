@@ -12,16 +12,11 @@ const msgRouter = require('@api/routes/msgRoutes');
 const userRouter = require('@api/routes/userRoutes');
 
 const app = express();
-const port = process.env.APP_PORT || 3000;
 
 app.use(cors());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-app.listen(port, () => {
-  console.log('App server is running on port ' + port);
-});
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -47,4 +42,9 @@ app.use('/', msgRouter);
 app.get('/assets/uploads/:image', (req, res) => {
   const image = req.params.image;
   res.sendFile(path.join(__dirname, './assets/uploads/' + image));
+});
+
+const port = process.env.APP_PORT || 3000;
+app.listen(port, () => {
+  console.log('App server is running on port ' + port);
 });
