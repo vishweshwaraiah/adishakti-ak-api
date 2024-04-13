@@ -11,7 +11,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: [ubuntu-latest]
+    runs-on: self-hosted
     strategy:
       matrix:
         node-version: [20.x]
@@ -26,15 +26,5 @@ jobs:
         cache: 'npm'
     - name: Install Dependencies
       run: npm ci
-    - name: Generate Deployment Package
-      run: zip -r adishakti-ak-api-build.zip .
-    - name: Deploy to ElasticBeanstalk
-      uses: einaregilsson/beanstalk-deploy@v22
-      with:
-        aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        application_name: Adishakti-ak-api
-        environment_name: Adishakti-ak-api-env
-        version_label: ${{ github.sha }}
-        region: ap-south-1
-        deployment_package: adishakti-ak-api-build.zip
+    - name: Run build script
+      run: npm run build --if-present
