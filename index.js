@@ -6,10 +6,10 @@ dotenv.config();
 
 const cors = require('cors');
 
-require('@api/configs/dbConfig');
+// require('@api/configs/dbConfig');
 
-const msgRouter = require('@api/routes/msgRoutes');
-const userRouter = require('@api/routes/userRoutes');
+// const msgRouter = require('@api/routes/msgRoutes');
+// const userRouter = require('@api/routes/userRoutes');
 
 const app = express();
 
@@ -32,17 +32,17 @@ app.get('/up', async (req, res) => {
   res.status(200).json({ message: 'App is running properly!' });
 });
 
-// End points for user actions
-app.use('/', userRouter);
+// // End points for user actions
+// app.use('/', userRouter);
 
-// End points for user messaging actions
-app.use('/', msgRouter);
+// // End points for user messaging actions
+// app.use('/', msgRouter);
 
-// to get images
-app.get('/assets/uploads/:image', (req, res) => {
-  const image = req.params.image;
-  res.sendFile(path.join(__dirname, './assets/uploads/' + image));
-});
+// // to get images
+// app.get('/assets/uploads/:image', (req, res) => {
+//   const image = req.params.image;
+//   res.sendFile(path.join(__dirname, './assets/uploads/' + image));
+// });
 
 const port = process.env.APP_PORT || 3000;
 app.listen(port, () => {
