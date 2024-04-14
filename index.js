@@ -13,6 +13,12 @@ const userRouter = require('@api/routes/userRoutes');
 
 const app = express();
 
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
+
+// Directory where your HTML files (views) are located
+app.set('views', path.join(__dirname, 'views'));
+
 app.use(cors());
 
 app.use(express.urlencoded({ extended: true }));
@@ -50,6 +56,11 @@ app.use('/', msgRouter);
 app.get('/assets/uploads/:image', (req, res) => {
   const image = req.params.image;
   res.sendFile(path.join(__dirname, './assets/uploads/' + image));
+});
+
+// Define a route to render the HTML file by default
+app.get('/*', (req, res) => {
+  res.render('index');
 });
 
 const port = process.env.APP_PORT || 8000;
