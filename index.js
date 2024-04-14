@@ -28,11 +28,15 @@ app.use((req, res, next) => {
 });
 
 // test if api endpoints are up and running from browsers
-app.get('/health/:prop', async (req, res) => {
-  const prop = req.params.prop || 'default';
+app.get('/health', async (req, res) => {
+  console.log(Object.keys(req.next), req.next);
+  const { url, method } = req || {};
   res.status(200).json({
     message: 'Application API is up and running properly!',
-    prop: prop,
+    health: {
+      url,
+      method,
+    },
   });
 });
 
