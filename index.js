@@ -28,8 +28,12 @@ app.use((req, res, next) => {
 });
 
 // test if api endpoints are up and running from browsers
-app.get('/up', async (req, res) => {
-  res.status(200).json({ message: 'App is running properly!' });
+app.get('/health/:prop', async (req, res) => {
+  const prop = req.params.prop || 'default';
+  res.status(200).json({
+    message: 'Application API is up and running properly!',
+    prop: prop,
+  });
 });
 
 // End points for user actions
