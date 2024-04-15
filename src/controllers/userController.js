@@ -132,7 +132,7 @@ const getUserByToken = async (req, res) => {
 
 const getUserByEmail = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email } = req.params;
 
     if (!email) {
       return res.status(404).json({ message: 'Invalid email id!' });

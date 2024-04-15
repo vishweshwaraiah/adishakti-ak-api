@@ -132,7 +132,7 @@ const fetchUserImage = async (req, res) => {
     if (imageName !== null && imageName !== '') {
       return res
         .status(404)
-        .json({ message: 'Parameter ImageName is null or empty!' });
+        .json({ message: 'Image name parameter is null or empty!' });
     }
 
     const getObjectParams = {
