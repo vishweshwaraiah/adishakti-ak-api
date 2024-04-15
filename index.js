@@ -8,7 +8,8 @@ const cors = require('cors');
 
 require('@api/configs/dbConfig');
 
-const { msgRouter, userRouter } = require('@api/routes');
+const userRouter = require('@api/routes/userRoutes');
+const msgRouter = require('@api/routes/msgRoutes');
 
 const app = express();
 
