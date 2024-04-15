@@ -35,8 +35,8 @@ app.use((req, res, next) => {
 
 // test if api endpoints are up and running from browsers
 app.get('/health', async (req, res) => {
-  console.log(Object.keys(req.next), req.next);
   const { url, method } = req || {};
+
   res.status(200).json({
     message: 'Application API is up and running properly!',
     health: {
@@ -51,12 +51,6 @@ app.use('/', userRouter);
 
 // End points for user messaging actions
 app.use('/', msgRouter);
-
-// to get images
-app.get('/assets/uploads/:image', (req, res) => {
-  const image = req.params.image;
-  res.sendFile(path.join(__dirname, './assets/uploads/' + image));
-});
 
 // Define a route to render the HTML file by default
 app.get('/*', (req, res) => {

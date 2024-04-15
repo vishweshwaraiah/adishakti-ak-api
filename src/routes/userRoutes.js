@@ -1,5 +1,11 @@
 const express = require('express');
-const MulterUpload = require('@api/configs/multer');
+
+const {
+  MulterUpload,
+  updateUserImage,
+  deleteUserImage,
+  fetchUserImage,
+} = require('@api/controllers/filesController');
 
 const {
   registerUser,
@@ -7,8 +13,6 @@ const {
   userLogin,
   getUserByToken,
   getUserByEmail,
-  updateUserImage,
-  deleteUserImage,
 } = require('@api/controllers/userController');
 
 const userRouter = express.Router();
@@ -25,6 +29,8 @@ userRouter.get('/fetch_user/:email', getUserByEmail);
 
 userRouter.put('/upload_image/', MulterUpload, updateUserImage);
 
-userRouter.put('/delete_image', deleteUserImage);
+userRouter.get('/fetch_image/:imageName', fetchUserImage);
+
+userRouter.delete('/delete_image', deleteUserImage);
 
 module.exports = userRouter;
