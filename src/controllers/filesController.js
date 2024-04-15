@@ -3,6 +3,7 @@ const {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
+  DeleteObjectCommand,
 } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const multer = require('multer');
@@ -97,11 +98,19 @@ const updateUserImage = async (req, res) => {
 
 const deleteUserImage = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, profileImage } = req.body;
 
-    if (!email) {
-      return res.status(404).json({ message: 'Invalid user!' });
+    if (!email || !profileImage) {
+      return res.status(404).json({ message: 'Invalid data!' });
     }
+
+    const getObjectParams = {
+      Bucket: s3BucketName,
+      Key: profileImage,
+    };
+
+    const command = new DeleteObjectCommand(getObjectParams);
+    await newS3Client.send(command);
 
     const filter = { email: email };
     const update = { profileImage: null };
@@ -118,7 +127,7 @@ const deleteUserImage = async (req, res) => {
 const fetchUserImage = async (req, res) => {
   // fetch image
   const imageName = req.params.imageName;
-  console.log('In server', imageName);
+
   const getObjectParams = {
     Bucket: s3BucketName,
     Key: imageName,
