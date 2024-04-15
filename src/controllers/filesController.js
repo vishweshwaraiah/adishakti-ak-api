@@ -121,12 +121,10 @@ const fetchUserImage = async (req, res) => {
   console.log('In server', imageName);
   const getObjectParams = {
     Bucket: s3BucketName,
-    key: imageName,
+    Key: imageName,
   };
   const command = new GetObjectCommand(getObjectParams);
-  const imageUrl = await getSignedUrl(newS3Client, command, {
-    expiresIn: 3600,
-  });
+  const imageUrl = await getSignedUrl(newS3Client, command);
   return res.status(200).json(imageUrl);
 };
 
