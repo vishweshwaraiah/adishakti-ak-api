@@ -8,8 +8,7 @@ const cors = require('cors');
 
 require('@api/configs/dbConfig');
 
-const msgRouter = require('@api/routes/msgRoutes');
-const userRouter = require('@api/routes/userRoutes');
+const { msgRouter, userRouter } = require('@api/routes');
 
 const app = express();
 
@@ -47,14 +46,18 @@ app.get('/health', async (req, res) => {
 });
 
 // End points for user actions
-app.use('/', userRouter);
+app.use('/api', userRouter);
 
 // End points for user messaging actions
-app.use('/', msgRouter);
+app.use('/api', msgRouter);
 
 // Define a route to render the HTML file by default
-app.get('/*', (req, res) => {
+app.get('/', (req, res) => {
   res.render('index');
+});
+
+app.get('/*', (req, res) => {
+  res.render('error_404');
 });
 
 const port = process.env.APP_PORT || 8000;
