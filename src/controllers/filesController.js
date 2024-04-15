@@ -125,16 +125,27 @@ const deleteUserImage = async (req, res) => {
 };
 
 const fetchUserImage = async (req, res) => {
-  // fetch image
-  const imageName = req.params.imageName;
+  try {
+    // fetch image
+    const imageName = req.params.imageName;
 
-  const getObjectParams = {
-    Bucket: s3BucketName,
-    Key: imageName,
-  };
-  const command = new GetObjectCommand(getObjectParams);
-  const imageUrl = await getSignedUrl(newS3Client, command);
-  return res.status(200).json(imageUrl);
+    if (imageName !== null && imageName !== '') {
+      return res
+        .status(404)
+        .json({ message: 'Parameter ImageName is null or empty!' });
+    }
+
+    const getObjectParams = {
+      Bucket: s3BucketName,
+      Key: imageName,
+    };
+    const command = new GetObjectCommand(getObjectParams);
+    const imageUrl = await getSignedUrl(newS3Client, command);
+    return res.status(200).json(imageUrl);
+  } catch (error) {
+    console.log('error', error);
+    res.status(500).json({ message: "Image doesn't exists!" });
+  }
 };
 
 module.exports = {

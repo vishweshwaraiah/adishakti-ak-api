@@ -27,10 +27,10 @@ userRouter.get('/get_user/:token', getUserByToken);
 
 userRouter.get('/fetch_user/:email', getUserByEmail);
 
-userRouter.put('/upload_image/', MulterUpload, updateUserImage);
+userRouter.put('/upload_image', MulterUpload, updateUserImage);
 
 userRouter.get('/fetch_image/:imageName', fetchUserImage);
 
-userRouter.delete('/delete_image', deleteUserImage);
+userRouter.put('/delete_image', deleteUserImage);
 
 module.exports = userRouter;
