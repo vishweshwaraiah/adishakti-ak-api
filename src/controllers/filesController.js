@@ -127,7 +127,7 @@ const fetchUserImage = async (req, res) => {
   const imageUrl = await getSignedUrl(newS3Client, command, {
     expiresIn: 3600,
   });
-  return imageUrl;
+  return res.status(200).json(imageUrl);
 };
 
 module.exports = {
