@@ -101,7 +101,9 @@ const deleteUserImage = async (req, res) => {
     const { email, profileImage } = req.body;
 
     if (!email || !profileImage) {
-      return res.status(404).json({ message: 'Invalid data!' });
+      return res
+        .status(404)
+        .json({ message: 'Email or Image name is invalid!' });
     }
 
     const getObjectParams = {
@@ -129,7 +131,7 @@ const fetchUserImage = async (req, res) => {
     // fetch image
     const imageName = req.params.imageName;
 
-    if (imageName !== null && imageName !== '') {
+    if (imageName === null || imageName === '') {
       return res
         .status(404)
         .json({ message: 'Image name parameter is null or empty!' });
