@@ -57,8 +57,10 @@ const renameFile = (ogFilename, fileFormat) => {
 
 const updateUserImage = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, currentImage } = req.body;
+
     const file = req.file;
+
     if (!email || !file) {
       return res
         .status(404)
@@ -72,7 +74,12 @@ const updateUserImage = async (req, res) => {
       .jpeg({ quality: 80 })
       .toBuffer();
 
-    const fileName = renameFile(file.originalname, 'jpeg');
+    let fileName = currentImage;
+
+    // replace if there is already an image available
+    if (currentImage === 'null') {
+      fileName = renameFile(file.originalname, 'jpeg');
+    }
 
     const params = {
       Bucket: s3BucketName,
