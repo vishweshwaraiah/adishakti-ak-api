@@ -1,4 +1,6 @@
 const express = require('express');
+const authorize = require('@api/_helpers/authorize');
+const Roles = require('@api/_helpers/roles');
 
 const {
   MulterUpload,
@@ -13,6 +15,9 @@ const {
   userLogin,
   getUserByToken,
   getUserByEmail,
+  mailSender,
+  updateUserDetails,
+  onlyAdmin,
 } = require('@api/controllers/userController');
 
 const userRouter = express.Router();
@@ -23,14 +28,20 @@ userRouter.get('/verify/:token', verifyUserToken);
 
 userRouter.post('/login', userLogin);
 
-userRouter.get('/get_user/:token', getUserByToken);
-
-userRouter.get('/fetch_user/:email', getUserByEmail);
-
 userRouter.put('/upload_image', MulterUpload, updateUserImage);
 
-userRouter.get('/fetch_image/:imageName', fetchUserImage);
+userRouter.get('/get_user/:token', authorize(), getUserByToken);
 
-userRouter.put('/delete_image', deleteUserImage);
+userRouter.get('/fetch_user/:userEmail', authorize(), getUserByEmail);
+
+userRouter.get('/fetch_image/:imageName', authorize(), fetchUserImage);
+
+userRouter.put('/delete_image', authorize(), deleteUserImage);
+
+userRouter.get('/send_mail/:userEmail', authorize(), mailSender);
+
+userRouter.put('/update_user', authorize(), updateUserDetails);
+
+userRouter.get('/admin_only', authorize(Roles.Admin), onlyAdmin);
 
 module.exports = userRouter;

@@ -1,4 +1,4 @@
-const NumsGroup = require('@api/models/nums_group');
+const NumsGroup = require('@api/models/groupModel');
 
 const sendMessages = async (req, res) => {
   const myTwilioNumber = process.env.TWILIO_NUMBER;

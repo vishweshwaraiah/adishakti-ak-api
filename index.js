@@ -10,6 +10,7 @@ require('@api/configs/dbConfig');
 
 const userRouter = require('@api/routes/userRoutes');
 const msgRouter = require('@api/routes/msgRoutes');
+const errorHandler = require('@api/_helpers/errorHandler');
 
 const app = express();
 
@@ -57,11 +58,16 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
+// View of all other 404 routes
 app.get('/*', (req, res) => {
   res.render('error_404');
 });
 
+// global error handler
+app.use(errorHandler);
+
 const port = process.env.APP_PORT || 8000;
+
 app.listen(port, () => {
   console.log('App server is running on port ' + port);
 });

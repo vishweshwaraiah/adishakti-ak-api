@@ -1,28 +1,29 @@
 const mongoose = require('mongoose');
+const Roles = require('@api/_helpers/roles');
 
 const userSchema = new mongoose.Schema({
-  name: {
+  userName: {
     type: String,
     required: false,
   },
-  email: {
+  userEmail: {
     type: String,
     required: true,
     unique: true,
   },
-  mobile: {
+  userMobile: {
     type: String,
     required: true,
   },
-  password: {
+  userPassword: {
     type: String,
     required: true,
   },
-  gender: {
+  userGender: {
     type: String,
     enum: ['male', 'female', 'other'],
   },
-  dob: {
+  userDob: {
     type: Date,
     required: false,
   },
@@ -34,6 +35,11 @@ const userSchema = new mongoose.Schema({
   profileImage: {
     type: String,
     required: false,
+  },
+  userRole: {
+    type: [String, Array],
+    required: true,
+    default: Roles.User,
   },
 });
 

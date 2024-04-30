@@ -8,7 +8,7 @@ const {
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const multer = require('multer');
 const sharp = require('sharp');
-const User = require('@api/models/user');
+const User = require('@api/models/userModel');
 
 const s3BucketName = process.env.S3_BUCKET_NAME;
 const s3BucketRegion = process.env.S3_BUCKET_REGION;
@@ -57,11 +57,11 @@ const renameFile = (ogFilename, fileFormat) => {
 
 const updateUserImage = async (req, res) => {
   try {
-    const { email, currentImage } = req.body;
+    const { userEmail, currentImage } = req.body;
 
     const file = req.file;
 
-    if (!email || !file) {
+    if (!userEmail || !file) {
       return res
         .status(404)
         .json({ message: 'Invalid file or missing email id!' });
@@ -91,7 +91,7 @@ const updateUserImage = async (req, res) => {
     const command = new PutObjectCommand(params);
     await newS3Client.send(command);
 
-    const filter = { email: email };
+    const filter = { userEmail: userEmail };
     const update = { profileImage: fileName };
 
     const updatedUser = await updateImageByKey(filter, update);
@@ -105,9 +105,9 @@ const updateUserImage = async (req, res) => {
 
 const deleteUserImage = async (req, res) => {
   try {
-    const { email, profileImage } = req.body;
+    const { userEmail, profileImage } = req.body;
 
-    if (!email || !profileImage) {
+    if (!userEmail || !profileImage) {
       return res
         .status(404)
         .json({ message: 'Email or Image name is invalid!' });
@@ -121,7 +121,7 @@ const deleteUserImage = async (req, res) => {
     const command = new DeleteObjectCommand(getObjectParams);
     await newS3Client.send(command);
 
-    const filter = { email: email };
+    const filter = { userEmail: userEmail };
     const update = { profileImage: null };
 
     const updatedUser = await updateImageByKey(filter, update);
