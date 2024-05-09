@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('@api/models/userModel');
 const secretKey = require('@api/configs/secretKey.json');
 const { MailHtml } = require('@api/configs/mailHtml');
+const utcToIst = require('@api/_helpers/dateUtils');
 
 const sendVerificationEmail = async (userEmail, verificationToken) => {
   const transport = nodemailer.createTransport({
@@ -28,7 +29,7 @@ const sendVerificationEmail = async (userEmail, verificationToken) => {
     const res = await transport.sendMail(mailOptions);
     return res;
   } catch (error) {
-    console.log(error);
+    console.log('error', error);
     return 'Error in sending verification mail!';
   }
 };
@@ -38,8 +39,6 @@ const mailSender = async (req, res) => {
   const verificationToken = crypto.randomBytes(20).toString('hex');
 
   const result = await sendVerificationEmail(userEmail, verificationToken);
-
-  console.log('result', result);
 
   return res.status(200).json({
     message: 'Email sent successfully!',
@@ -82,7 +81,7 @@ const registerUser = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log('Error while user registration!', error.message);
+    console.log('error!', error);
     return res.status(500).json({ message: 'Registration failed!' });
   }
 };
@@ -191,20 +190,27 @@ const updateUserDetails = async (req, res) => {
     }
 
     const filter = { userEmail: userEmail };
+
+    const dobIST = utcToIst(userDob);
+
     const update = {
       userName: userName,
       userEmail: userEmail,
       userMobile: userMobile,
       userGender: userGender,
-      userDob: userDob,
+      userDob: dobIST,
     };
 
-    const updatedUser = await updateImageByKey(filter, update);
+    const options = {
+      new: true,
+    };
+
+    const updatedUser = await User.findOneAndUpdate(filter, update, options);
 
     return res.status(200).json(updatedUser);
   } catch (error) {
     console.log('error', error);
-    res.status(500).json({ message: "User doesn't exists!" });
+    res.status(500).json({ message: "Invalid data or User doesn't exists!" });
   }
 };
 

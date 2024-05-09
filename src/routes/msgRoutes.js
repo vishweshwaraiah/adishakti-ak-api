@@ -3,6 +3,7 @@
  */
 
 const express = require('express');
+const authorize = require('@api/_helpers/authorize');
 const {
   sendMessages,
   createGroup,
@@ -12,12 +13,12 @@ const {
 
 const msgRouter = express.Router();
 
-msgRouter.post('/message', sendMessages);
+msgRouter.post('/message', authorize(), sendMessages);
 
-msgRouter.post('/creategroup', createGroup);
+msgRouter.post('/creategroup', authorize(), createGroup);
 
-msgRouter.get('/fetchgroups', fetchNumsGroups);
+msgRouter.get('/fetchgroups', authorize(), fetchNumsGroups);
 
-msgRouter.delete('/delete/:groupName', deleteGroup);
+msgRouter.delete('/delete/:groupName', authorize(), deleteGroup);
 
 module.exports = msgRouter;
