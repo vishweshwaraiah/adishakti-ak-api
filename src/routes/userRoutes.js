@@ -20,6 +20,11 @@ const {
   onlyAdmin,
 } = require('@api/controllers/userController');
 
+const {
+  updateSettings,
+  fetchSettings,
+} = require('@api/controllers/settingsController');
+
 const userRouter = express.Router();
 
 userRouter.post('/register', registerUser);
@@ -43,5 +48,9 @@ userRouter.get('/send_mail/:userEmail', authorize(), mailSender);
 userRouter.put('/update_user', authorize(), updateUserDetails);
 
 userRouter.get('/admin_only', authorize(Roles.Admin), onlyAdmin);
+
+userRouter.put('/update_settings', authorize(), updateSettings);
+
+userRouter.get('/fetch_settings/:userEmail', authorize(), fetchSettings);
 
 module.exports = userRouter;

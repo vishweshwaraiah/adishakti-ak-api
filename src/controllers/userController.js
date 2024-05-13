@@ -38,7 +38,7 @@ const mailSender = async (req, res) => {
   const userEmail = req.params.userEmail;
   const verificationToken = crypto.randomBytes(20).toString('hex');
 
-  const result = await sendVerificationEmail(userEmail, verificationToken);
+  await sendVerificationEmail(userEmail, verificationToken);
 
   return res.status(200).json({
     message: 'Email sent successfully!',
