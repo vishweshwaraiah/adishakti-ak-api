@@ -1,11 +1,12 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
-require('module-alias/register');
 const dotenv = require('dotenv');
-dotenv.config();
-
 const cors = require('cors');
 
+dotenv.config();
+
+require('module-alias/register');
 require('@api/configs/dbConfig');
 
 const userRouter = require('@api/routes/userRoutes');
@@ -13,6 +14,14 @@ const msgRouter = require('@api/routes/msgRoutes');
 const errorHandler = require('@api/_helpers/errorHandler');
 
 const app = express();
+
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  limit: 100, // 100 api calls per 10 minutes
+  message: 'Too many requests, please try again after sometime!',
+});
+
+app.use(limiter);
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');

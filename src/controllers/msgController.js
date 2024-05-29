@@ -1,6 +1,7 @@
 const NumsGroup = require('@api/models/groupModel');
+const twilio_client = require('twilio');
 
-const sendMessages = async (req, res) => {
+const sendMessages = (req, res) => {
   const myTwilioNumber = process.env.TWILIO_NUMBER;
   const accountSid = process.env.TWILIO_SID;
   const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -9,25 +10,37 @@ const sendMessages = async (req, res) => {
   const numbers = req.body?.numbers;
   const messageContent = req.body?.message;
 
-  const client = require('twilio')(accountSid, authToken);
+  const client = twilio_client(accountSid, authToken);
 
-  Promise.all(
-    numbers.map((number) => {
-      const numInd = '+91' + number;
-      return client.messages.create({
-        to: numInd,
-        from: myTwilioNumber || serviceSid,
-        body: messageContent,
-      });
-    })
-  )
-    .then((message) => {
-      return res.status(200).json(message);
-    })
-    .catch((err) => {
-      const errMessage = err.message;
-      return res.status(err.status).json({ message: errMessage });
+  numbers.forEach(async (number) => {
+    const numInd = number.value;
+    const doneStatus = await client.messages.create({
+      to: numInd,
+      from: myTwilioNumber,
+      body: messageContent,
     });
+    console.log('twilio success!', doneStatus);
+  });
+
+  // Promise.all(
+  //   numbers.map((number) => {
+  //     const numInd = number.value;
+  //     return client.messages.create({
+  //       to: numInd,
+  //       from: myTwilioNumber,
+  //       body: messageContent,
+  //     });
+  //   })
+  // )
+  //   .then((message) => {
+  //     console.log('twilio success!', message);
+  //     return res.status(200).json(message);
+  //   })
+  //   .catch((err) => {
+  //     const errMessage = err.message;
+  //     console.log('twilio error!', errMessage);
+  //     return res.status(err.status).json({ message: errMessage });
+  //   });
 };
 
 const createGroup = async (req, res) => {
