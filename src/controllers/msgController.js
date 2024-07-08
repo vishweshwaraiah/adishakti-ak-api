@@ -59,7 +59,10 @@ const createGroup = async (req, res) => {
 
     const savedItem = await newGroup.save();
 
-    return res.status(200).json(savedItem);
+    return res.status(200).json({
+      group: savedItem,
+      message: 'Group ' + savedItem.group_name + ' created successfully!',
+    });
   } catch (error) {
     if (error.code === 11000) {
       return res.status(500).json({
@@ -73,11 +76,49 @@ const createGroup = async (req, res) => {
   }
 };
 
+const updateGroup = async (req, res) => {
+  try {
+    const groupName = req.body?.groupName;
+    const groupId = req.body?.groupId;
+    const numberList = req.body?.numberList;
+
+    if (!groupName || !numberList.length || !groupId) {
+      return res.status(400).json({ message: 'Wrong group data!' });
+    }
+
+    const filter = { _id: groupId };
+
+    const update = {
+      group_name: groupName,
+      nums_group: numberList,
+    };
+
+    const options = {
+      new: true,
+    };
+
+    const updatedGroup = await NumsGroup.findOneAndUpdate(
+      filter,
+      update,
+      options
+    );
+
+    return res.status(200).json({
+      group: updatedGroup,
+      message: 'Group ' + groupName + ' created successfully!',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 const fetchNumsGroups = async (req, res) => {
   try {
     const groupDetails = await NumsGroup.find();
     return res.status(200).json(groupDetails);
-  } catch (error) {
+  } catch (err) {
     const errMessage = err.message;
     return res.status(err.status).json({ message: errMessage });
   }
@@ -106,6 +147,7 @@ const deleteGroup = async (req, res) => {
 module.exports = {
   sendMessages,
   createGroup,
+  updateGroup,
   fetchNumsGroups,
   deleteGroup,
 };

@@ -107,9 +107,18 @@ const verifyUserToken = async (req, res) => {
 
 const userLogin = async (req, res) => {
   try {
-    const { userEmail, userPassword } = req.body;
+    const { userName, userPassword } = req.body;
 
-    const user = await User.findOne({ userEmail: userEmail });
+    const user = await User.findOne({
+      $or: [
+        {
+          userEmail: userName,
+        },
+        {
+          userMobile: userName,
+        },
+      ],
+    });
 
     if (!user) {
       return res.status(404).json({ message: 'Invalid email or password!' });
