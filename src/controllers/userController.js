@@ -5,7 +5,7 @@ const User = require('@api/models/userModel');
 const secretKey = require('@api/configs/secretKey.json');
 const { MailHtml } = require('@api/configs/mailHtml');
 const utcToIst = require('@api/_helpers/dateUtils');
-,sdnkasndkja
+
 const sendVerificationEmail = async (userEmail, verificationToken) => {
   const transport = nodemailer.createTransport({
     service: process.env.MAIL_SERVICE,
