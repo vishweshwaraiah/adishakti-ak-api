@@ -35,7 +35,7 @@ userRouter.post('/login', userLogin);
 
 userRouter.put('/upload_image', MulterUpload, updateUserImage);
 
-userRouter.get('/get_user/:token', authorize(), getUserByToken);
+userRouter.get('/get_user', authorize(), getUserByToken);
 
 userRouter.get('/fetch_user/:userEmail', authorize(), getUserByEmail);
 

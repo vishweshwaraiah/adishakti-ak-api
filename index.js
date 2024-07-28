@@ -47,6 +47,8 @@ app.use((req, res, next) => {
 app.get('/health', async (req, res) => {
   const { url, method } = req || {};
 
+  console.log('Health Check called');
+
   res.status(200).json({
     message: 'Application API is up and running properly!',
     health: {

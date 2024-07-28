@@ -146,7 +146,8 @@ const userLogin = async (req, res) => {
 
 const getUserByToken = async (req, res) => {
   try {
-    const { token } = req.params;
+    const authToken = req.get('Authorization');
+    const token = authToken.substring(7, authToken.length);
 
     if (!token || token === null) {
       return res.status(404).json({ message: 'Invalid token!' });
