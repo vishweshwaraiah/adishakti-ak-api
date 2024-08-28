@@ -5,33 +5,59 @@ const sendMessages = (req, res) => {
   const numbers = req.body?.numbers;
   const messageContent = req.body?.message;
 
+  const smsProviderAuthKey = process.env.SMSCOU_AUTH_KEY;
+  const smsProviderAuthToken = process.env.SMSCOU_AUTH_TOKEN;
+  let smsProviderApiUrl = process.env.SMSCOU_API_PATH;
+
+  // Combine authKey and authToken
+  const authsCombined = `${smsProviderAuthKey}:${smsProviderAuthToken}`;
+
+  // Encode to Base64
+  const base64Token = Buffer.from(authsCombined).toString('base64');
+
   const numList = numbers?.map((n) => n.phoneNumber);
 
-  const apiUrl =
-    'https://private-anon-33737a2347-smscountryapi.apiary-mock.com/v0.1/Accounts/authKey/BulkSMSes/';
+  if (!numList.length)
+    return res
+      .status(404)
+      .json({ message: 'At least one number is required!' });
+
   const bodyReq = {
-    Text: messageContent,
-    Numbers: numList,
-    SenderId: 'SMSCountry',
-    DRNotifyUrl: 'http://localhost:8000/health',
+    Text: 'User Admin login OTP is** - SMSCOU', // messageContent,
+    SenderId: 'SMSCOU',
+    DRNotifyUrl: '',
     DRNotifyHttpMethod: 'POST',
     Tool: 'API',
+  };
+
+  if (numList.length > 1) {
+    apiUrl = `${smsProviderApiUrl}/${smsProviderAuthKey}/BulkSMSes/`;
+    bodyReq.Numbers = numList;
+  } else {
+    apiUrl = `${smsProviderApiUrl}/${smsProviderAuthKey}/SMSes/`;
+    bodyReq.Number = numList[0];
+  }
+
+  const requestHeaders = {
+    Authorization: 'Basic ' + base64Token,
+    'Content-Type': 'application/json',
   };
 
   axios({
     method: 'POST',
     url: apiUrl,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: bodyReq,
+    headers: requestHeaders,
+    data: JSON.stringify(bodyReq),
   })
     .then((response) => {
       return res.status(200).json(response.data);
     })
     .catch((error) => {
-      const errMessage = err.message;
-      return res.status(err.status).json({ message: errMessage });
+      const errMessage =
+        error.response?.data?.Message || 'Something went wrong.!';
+      return res
+        .status(error.response?.status || 500)
+        .json({ message: errMessage });
     });
 };
 
